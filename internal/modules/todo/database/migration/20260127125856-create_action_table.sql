@@ -1,0 +1,19 @@
+-- +migrate Up
+CREATE TABLE actions (
+    id SERIAL PRIMARY KEY,
+    item_id INTEGER NOT NULL,
+    date TIMESTAMP WITH TIME ZONE NOT NULL,
+    user_id INTEGER NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    CONSTRAINT fk_item
+        FOREIGN KEY(item_id)
+            REFERENCES items(id)
+            ON DELETE CASCADE,
+    CONSTRAINT fk_user
+        FOREIGN KEY(user_id)
+            REFERENCES users(id)
+            ON DELETE CASCADE
+);
+
+-- +migrate Down
+DROP TABLE actions;
