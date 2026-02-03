@@ -3,19 +3,19 @@ package main
 import (
 	"context"
 	"fmt"
-	"goProject/config"
-	"goProject/controller/httpserver"
-	applicatioDto "goProject/dto/application"
-	postgres "goProject/repository/pg"
-	postgresaction "goProject/repository/pg/pgaction"
-	postgresitem "goProject/repository/pg/pgitem"
-	postgrestransaction "goProject/repository/pg/pgtransaction"
-	postgresuser "goProject/repository/pg/pguser"
-	actionService "goProject/service/action"
-	authService "goProject/service/auth"
-	itemService "goProject/service/item"
-	transactionService "goProject/service/transaction"
-	userService "goProject/service/user"
+	"goProject/internal/config"
+	"goProject/internal/controller/httpserver"
+	applicatioDto "goProject/internal/dto/application"
+	"goProject/internal/repository/postgres"
+	postgresaction "goProject/internal/repository/postgres/action"
+	postgresitem "goProject/internal/repository/postgres/item"
+	postgrestransaction "goProject/internal/repository/postgres/transaction"
+	postgresuser "goProject/internal/repository/postgres/user"
+	actionservice "goProject/internal/service/action"
+	authservice "goProject/internal/service/auth"
+	itemservice "goProject/internal/service/item"
+	transactionservice "goProject/internal/service/transaction"
+	userservice "goProject/internal/service/user"
 	"net/http"
 	"os"
 	"os/signal"
@@ -54,21 +54,27 @@ func main() {
 }
 
 func setupServices(cfg config.Config) (setupServiceDto applicatioDto.SetupServiceDTO){
-	authSvc := authService.New(cfg.Auth)
+	authSvc := authservice.New(cfg.Auth)
 
-	postgresRepo := postgres.New(cfg.PostgreSQL)
+	postgresRepo ,err := postgres.New(cfg.PostgreSQL)
+	if err != nil {
+		fmt.Println("postgres error" ,err)
+		return
+	}
 
-	userRepo := postgresuser.New(postgresRepo)
-	userSvc := userService.New(authSvc ,userRepo)
+	sqlDB := postgresRepo.Conn()
 
-	transactionRepo := postgrestransaction.New(postgresRepo)
-	transactionSvc := transactionService.New(transactionRepo)
+	userRepo := postgresuser.New(sqlDB)
+	userSvc := userservice.New(authSvc ,userRepo)
 
-	itemRepo := postgresitem.New(postgresRepo)
-	itemSvc := itemService.New(itemRepo)
+	transactionRepo := postgrestransaction.New(sqlDB)
+	transactionSvc := transactionservice.New(transactionRepo)
 
-	actionRepo := postgresaction.New(postgresRepo)
-	actionSvc := actionService.New(actionRepo)
+	itemRepo := postgresitem.New(sqlDB)
+	itemSvc := itemservice.New(itemRepo)
+
+	actionRepo := postgresaction.New(sqlDB)
+	actionSvc := actionservice.New(actionRepo)
 
 	return applicatioDto.SetupServiceDTO{
 		UserService:        userSvc,

@@ -1,7 +1,8 @@
-package authService
+package pkg
 
 import (
-	"goProject/entity"
+	"goProject/internal/entity"
+
 	"github.com/golang-jwt/jwt/v5"
 )
 

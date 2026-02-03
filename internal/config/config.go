@@ -1,8 +1,8 @@
 package config
 
 import (
-	postgres "goProject/repository/pg"
-	authService "goProject/service/auth"
+	"goProject/internal/repository/postgres"
+	authservice "goProject/internal/service/auth"
 	"time"
 )
 
@@ -19,5 +19,5 @@ type Config struct {
 	Application Application        `koanf:"application"`
 	HTTPServer  HTTPServer         `koanf:"http_server"`
 	PostgreSQL  postgres.Config    `koanf:"postgresql"`
-	Auth        authService.Config `koanf:"auth"`
+	Auth        authservice.Config `koanf:"auth"`
 }
