@@ -6,11 +6,11 @@ import (
 
 type User struct {
 	ID          uint
-	PhoneNumber string
 	Email       string
 	Name        string
 	Password    string
 	Role        Role
+	Status		bool
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

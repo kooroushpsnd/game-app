@@ -1,6 +1,8 @@
 package postgresuser
 
-import "goProject/internal/repository/postgres"
+import (
+	"goProject/internal/repository/postgres"
+)
 
 type Repo struct {
 	db postgres.DBTX

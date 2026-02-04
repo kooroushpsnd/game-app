@@ -6,8 +6,8 @@ import (
 )
 
 type Repository interface {
-	Register(u entity.User) (entity.User, error)
-	GetUserByPhoneNumber(phoneNumber string) (entity.User, error)
+	Register(ctx context.Context ,u entity.User) (entity.User, error)
+	GetUserByEmail(ctx context.Context ,email string) (entity.User, error)
 	GetUserByID(ctx context.Context, userID uint) (entity.User, error)
 }
 

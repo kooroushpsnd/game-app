@@ -7,14 +7,14 @@ import (
 	"goProject/internal/controller/httpserver"
 	applicatioDto "goProject/internal/dto/application"
 	"goProject/internal/repository/postgres"
-	postgresaction "goProject/internal/repository/postgres/action"
-	postgresitem "goProject/internal/repository/postgres/item"
-	postgrestransaction "goProject/internal/repository/postgres/transaction"
+	// postgresaction "goProject/internal/repository/postgres/action"
+	// postgresitem "goProject/internal/repository/postgres/item"
+	// postgrestransaction "goProject/internal/repository/postgres/transaction"
 	postgresuser "goProject/internal/repository/postgres/user"
-	actionservice "goProject/internal/service/action"
+	// actionservice "goProject/internal/service/action"
 	authservice "goProject/internal/service/auth"
-	itemservice "goProject/internal/service/item"
-	transactionservice "goProject/internal/service/transaction"
+	// itemservice "goProject/internal/service/item"
+	// transactionservice "goProject/internal/service/transaction"
 	userservice "goProject/internal/service/user"
 	"net/http"
 	"os"
@@ -67,19 +67,19 @@ func setupServices(cfg config.Config) (setupServiceDto applicatioDto.SetupServic
 	userRepo := postgresuser.New(sqlDB)
 	userSvc := userservice.New(authSvc ,userRepo)
 
-	transactionRepo := postgrestransaction.New(sqlDB)
-	transactionSvc := transactionservice.New(transactionRepo)
+	// transactionRepo := postgrestransaction.New(sqlDB)
+	// transactionSvc := transactionservice.New(transactionRepo)
 
-	itemRepo := postgresitem.New(sqlDB)
-	itemSvc := itemservice.New(itemRepo)
+	// itemRepo := postgresitem.New(sqlDB)
+	// itemSvc := itemservice.New(itemRepo)
 
-	actionRepo := postgresaction.New(sqlDB)
-	actionSvc := actionservice.New(actionRepo)
+	// actionRepo := postgresaction.New(sqlDB)
+	// actionSvc := actionservice.New(actionRepo)
 
 	return applicatioDto.SetupServiceDTO{
-		UserService:        userSvc,
-		ItemService:        itemSvc,
-		ActionService:      actionSvc,
-		TransactionService: transactionSvc,
+		UserService:        &userSvc,
+		// ItemService:        itemSvc,
+		// ActionService:      actionSvc,
+		// TransactionService: transactionSvc,
 	}
 }

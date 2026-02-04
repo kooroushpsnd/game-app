@@ -2,7 +2,6 @@ package authservice
 
 import (
 	"goProject/internal/entity"
-	"goProject/internal/pkg"
 	"strings"
 	"time"
 
@@ -33,17 +32,17 @@ func (s Service) CreateRefreshToken(user entity.User) (string, error) {
 	return s.createToken(user.ID, user.Role, s.config.RefreshSubject, s.config.RefreshExpirationTime)
 }
 
-func (s Service) ParseToken(bearerToken string) (*pkg.Claims, error) {
+func (s Service) ParseToken(bearerToken string) (*Claims, error) {
 	tokenStr := strings.Replace(bearerToken, "Bearer ", "", 1)
 
-	token, err := jwt.ParseWithClaims(tokenStr, &pkg.Claims{}, func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.ParseWithClaims(tokenStr, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(s.config.SignKey), nil
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	if claims, ok := token.Claims.(*pkg.Claims); ok && token.Valid {
+	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
 		return claims, nil
 	} else {
 		return nil, err
@@ -51,7 +50,7 @@ func (s Service) ParseToken(bearerToken string) (*pkg.Claims, error) {
 }
 
 func (s Service) createToken(userID uint, role entity.Role, subject string, expireDuration time.Duration) (string, error) {
-	claims := pkg.Claims{
+	claims := Claims{
 		RegisteredClaims: jwt.RegisteredClaims{
 			Subject:   subject,
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(expireDuration)),

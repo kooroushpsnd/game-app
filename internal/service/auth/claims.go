@@ -1,4 +1,4 @@
-package pkg
+package authservice
 
 import (
 	"goProject/internal/entity"
