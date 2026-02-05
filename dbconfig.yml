@@ -1,4 +1,4 @@
 development:
   dialect: postgres
   datasource: host=localhost port=5433 user=postgres password=p.123456 dbname=goproject_db sslmode=disable
-  dir: repository/migrations
+  dir: internal/repository/postgres/migrations

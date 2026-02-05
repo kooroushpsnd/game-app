@@ -1,4 +1,4 @@
--- -- +migrate Up
+-- +migrate Up
 -- CREATE TABLE items (
 --     id SERIAL PRIMARY KEY,
 --     name VARCHAR(255) NOT NULL,
@@ -11,5 +11,5 @@
 --             ON DELETE CASCADE
 -- );
 
--- -- +migrate Down
+-- +migrate Down
 -- DROP TABLE items;

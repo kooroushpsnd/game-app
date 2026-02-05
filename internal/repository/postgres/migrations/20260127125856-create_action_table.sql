@@ -1,4 +1,4 @@
--- -- +migrate Up
+-- +migrate Up
 -- CREATE TABLE actions (
 --     id SERIAL PRIMARY KEY,
 --     item_id INTEGER NOT NULL,
@@ -15,5 +15,5 @@
 --             ON DELETE CASCADE
 -- );
 
--- -- +migrate Down
+-- +migrate Down
 -- DROP TABLE actions;

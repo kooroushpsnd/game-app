@@ -1,7 +1,7 @@
 package errmsg
 
 const (
-	ErrorMsgUserNotFound = "User Not Found"
-	ErrorMsgUserDuplicated = "User Duplicated"
-	ErrorMsgUserCreation = "User Creation Error"
+	ErrorMsg_UserNotFound   = "User Not Found"
+	ErrorMsg_UserDuplicated = "User Duplicated"
+	ErrorMsg_UserCreation   = "User Creation Error"
 )

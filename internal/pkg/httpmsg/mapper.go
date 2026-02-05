@@ -8,19 +8,19 @@ import (
 
 func Error(err error) (msg string, code int) {
 	switch err.(type) {
-		case richerror.RichError:
-			re := err.(richerror.RichError)
-			msg := re.Message()
+	case richerror.RichError:
+		re := err.(richerror.RichError)
+		msg := re.Message()
 
-			code := mapKindToHTTPStatusCode(re.Kind())
+		code := mapKindToHTTPStatusCode(re.Kind())
 
-			if code > 500 {
-				msg = errmsg.ErrorMsgSomethingWentWrong
-			}
+		if code > 500 {
+			msg = errmsg.ErrorMsg_SomethingWentWrong
+		}
 
-			return msg ,code
-		default:
-			return err.Error() ,http.StatusBadRequest
+		return msg, code
+	default:
+		return err.Error(), http.StatusBadRequest
 	}
 }
 

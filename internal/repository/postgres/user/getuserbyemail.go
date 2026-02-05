@@ -15,14 +15,14 @@ func (r *Repo) GetUserByEmail(ctx context.Context, email string) (entity.User, e
 	user, err := scanUser(row)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return entity.User{} ,richerror.New(op).
-			WithErr(err).WithMessage(errmsg.ErrorMsgUserNotFound).WithKind(richerror.KindNotFound)
-			
+			return entity.User{}, richerror.New(op).
+				WithErr(err).WithMessage(errmsg.ErrorMsg_UserNotFound).WithKind(richerror.KindNotFound)
+
 		}
 
-		return entity.User{} ,richerror.New(op).
-		WithErr(err).WithMessage(errmsg.ErrorMsgCantScanQueryResult).WithKind(richerror.KindInvalid)
+		return entity.User{}, richerror.New(op).
+			WithErr(err).WithMessage(errmsg.ErrorMsg_CantScanQueryResult).WithKind(richerror.KindInvalid)
 	}
 
-	return user ,nil
+	return user, nil
 }

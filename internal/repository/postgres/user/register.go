@@ -27,10 +27,10 @@ func (r *Repo) Register(ctx context.Context, u entity.User) (entity.User, error)
 		u.Role.String(),
 		u.Status,
 	)
-	user ,err := scanUser(row)
+	user, err := scanUser(row)
 	if err != nil {
-		return entity.User{} ,richerror.New(op).
-			WithErr(err).WithMessage(errmsg.ErrorMsgUserCreation)
+		return entity.User{}, richerror.New(op).
+			WithErr(err).WithMessage(errmsg.ErrorMsg_UserCreation)
 	}
 
 	user.Role = entity.MapToRoleEntity(roleStr)
