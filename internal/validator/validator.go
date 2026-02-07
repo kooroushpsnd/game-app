@@ -1,6 +1,8 @@
 package validator
 
 import (
+	"goProject/internal/pkg/errmsg"
+	"goProject/internal/pkg/richerror"
 	"reflect"
 	"strings"
 
@@ -30,5 +32,15 @@ func New() *AppValidator {
 }
 
 func (a *AppValidator) Validate(i any) error {
-	return a.v.Struct(i)
+	const op = "validator"
+	if err := a.v.Struct(i);err != nil {
+		return richerror.New(op).
+			WithErr(err).
+			WithKind(richerror.KindInvalid).
+			WithMessage(errmsg.ErrorMsg_InvalidInput).
+			WithMeta(map[string]interface{}{
+				"request": i,
+			})
+	}
+	return nil
 }

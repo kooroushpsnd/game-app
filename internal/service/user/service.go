@@ -2,6 +2,8 @@ package userservice
 
 import (
 	"context"
+	"crypto/md5"
+	"encoding/hex"
 	"goProject/internal/entity"
 )
 
@@ -9,6 +11,7 @@ type Repository interface {
 	Register(ctx context.Context ,u entity.User) (entity.User, error)
 	GetUserByEmail(ctx context.Context ,email string) (entity.User, error)
 	GetUserByID(ctx context.Context, userID uint) (entity.User, error)
+	IsEmailUnique(ctx context.Context ,email string) (bool ,error)
 }
 
 type AuthGenerator interface {
@@ -23,4 +26,9 @@ type Service struct {
 
 func New(authGenerator AuthGenerator, repo Repository) Service {
 	return Service{auth: authGenerator, repo: repo}
+}
+
+func getMD5Hash(text string) string {
+	hash := md5.Sum([]byte(text))
+	return hex.EncodeToString(hash[:])
 }

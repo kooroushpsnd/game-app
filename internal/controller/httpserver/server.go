@@ -23,6 +23,7 @@ func New(config config.Config, services applicatioDto.SetupServiceDTO) Server {
 
 	return Server{
 		config: config,
+		userController: usercontroller.New(config.Auth ,*services.AuthService ,*services.UserService),
 		Router: e,
 	}
 }
@@ -33,6 +34,7 @@ func (s Server) Serve() {
 	s.Router.Use(middleware.Recover())
 
 	s.Router.GET("/health-check", s.healthCheck)
+	s.userController.SetRoutes(s.Router)
 
 	address := fmt.Sprintf(":%d", s.config.HTTPServer.Port)
 	fmt.Printf("start echo server on %s\n", address)

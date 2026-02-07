@@ -8,7 +8,7 @@ application:
   port: 8080
 
 postgresql:
-  port: 5432
+  port: 5433
   host: localhost
   db_name: goproject_db
   username: postgres

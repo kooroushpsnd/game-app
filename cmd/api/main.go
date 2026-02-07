@@ -78,6 +78,7 @@ func setupServices(cfg config.Config) (setupServiceDto applicatioDto.SetupServic
 
 	return applicatioDto.SetupServiceDTO{
 		UserService:        &userSvc,
+		AuthService:		&authSvc,
 		// ItemService:        itemSvc,
 		// ActionService:      actionSvc,
 		// TransactionService: transactionSvc,

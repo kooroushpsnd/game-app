@@ -11,12 +11,14 @@ import (
 func (r *Repo) GetUserByEmail(ctx context.Context, email string) (entity.User, error) {
 	const op = "postgres.getUserByEmail"
 
-	row := r.db.QueryRowContext(ctx, "select * from users where email = ?", email)
+	row := r.db.QueryRowContext(ctx, "select * from users where email = $1", email)
 	user, err := scanUser(row)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return entity.User{}, richerror.New(op).
-				WithErr(err).WithMessage(errmsg.ErrorMsg_UserNotFound).WithKind(richerror.KindNotFound)
+				WithErr(err).
+				WithMessage(errmsg.ErrorMsg_UserNotFound).
+				WithKind(richerror.KindNotFound)
 
 		}
 

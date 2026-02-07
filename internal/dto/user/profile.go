@@ -1,9 +1,9 @@
 package userdto
 
-type userGetProfileRequestDto struct {
+type GetProfileRequestDto struct {
 	UserID uint 
 }
 
-type userGetProfileResponseDto struct {
+type GetProfileResponseDto struct {
 	User UserInfoDto `json:"user"`
 }

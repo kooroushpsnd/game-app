@@ -1,17 +1,18 @@
 package validator
 
 import (
+	"errors"
 	"fmt"
 	"goProject/internal/pkg/errmsg"
 
-	"github.com/go-playground/validator/v10"
+	v10 "github.com/go-playground/validator/v10"
 )
 
 func FieldErrors(err error) map[string]string {
 	out := map[string]string{}
 
-	ve, ok := err.(validator.ValidationErrors)
-	if !ok {
+	var ve v10.ValidationErrors
+	if !errors.As(err, &ve) {
 		out["_error"] = err.Error()
 		return out
 	}

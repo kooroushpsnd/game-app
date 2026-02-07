@@ -76,3 +76,7 @@ func (r RichError) Message() string {
 
 	return ""
 }
+
+func (r RichError) Unwrap() error {
+	return r.wrappedError
+}

@@ -20,8 +20,8 @@ type Service struct {
 	config Config
 }
 
-func New(cfg Config) *Service {
-	return &Service{config: cfg}
+func New(cfg Config) Service {
+	return Service{config: cfg}
 }
 
 func (s Service) CreateAccessToken(user entity.User) (string, error) {
