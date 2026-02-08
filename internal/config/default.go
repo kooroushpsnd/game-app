@@ -7,5 +7,6 @@ var defaultConfig = map[string]interface{}{
 	"auth.access_subject":                   AccessTokenSubject,
 	"auth.refresh_expiration_time":          RefreshTokenExpireDuration,
 	"auth.access_expiration_time":           AccessTokenExpireDuration,
+	"auth.signing_method":                   SigningMethodJwt,
 	"application.graceful_shutdown_timeout": time.Second * 5,
 }

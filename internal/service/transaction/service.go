@@ -9,8 +9,8 @@ type Service struct {
 	repo Repository
 }
 
-func New(cfg Config ,repository Repository) Service {
-	return Service{
+func New(cfg Config ,repository Repository) *Service {
+	return &Service{
 		config: cfg,
 		repo: repository,
 	}

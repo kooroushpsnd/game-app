@@ -7,12 +7,12 @@ import (
 
 type Controller struct {
 	authConfig authservice.Config
-	authSvc    authservice.Service
-	userSvc    userservice.Service
+	authSvc    *authservice.Service
+	userSvc    *userservice.Service
 }
 
-func New(authConfig authservice.Config, authSvc authservice.Service, userSvc userservice.Service) Controller {
-	return Controller{
+func New(authConfig authservice.Config, authSvc *authservice.Service, userSvc *userservice.Service) *Controller {
+	return &Controller{
 		authConfig: authConfig,
 		authSvc:    authSvc,
 		userSvc:    userSvc,

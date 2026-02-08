@@ -25,47 +25,47 @@ import (
 func main() {
 	cfg := config.Load("config.yml")
 
-	go func(){
+	go func() {
 		http.ListenAndServe(fmt.Sprintf(":%d", cfg.Application.Port), nil)
 	}()
 
 	services := setupServices(cfg)
 
-	server := httpserver.New(cfg ,services)
-	go func ()  {
+	server := httpserver.New(cfg, services)
+	go func() {
 		server.Serve()
 	}()
 
-	quit := make(chan os.Signal ,1)
-	signal.Notify(quit ,os.Interrupt)
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
 	<-quit
 	fmt.Println("starting to shutdown gracefully")
 
 	ctx := context.Background()
-	ctxWithTimeout ,cancel := context.WithTimeout(ctx ,cfg.Application.GracefulShutdownTimeout)
+	ctxWithTimeout, cancel := context.WithTimeout(ctx, cfg.Application.GracefulShutdownTimeout)
 	defer cancel()
 
 	if err := server.Router.Shutdown(ctxWithTimeout); err != nil {
-		fmt.Println("http server shutdown error" ,err)
+		fmt.Println("http server shutdown error", err)
 	}
 
 	time.Sleep(cfg.Application.GracefulShutdownTimeout)
 	<-ctxWithTimeout.Done()
 }
 
-func setupServices(cfg config.Config) (setupServiceDto applicatioDto.SetupServiceDTO){
+func setupServices(cfg config.Config) (setupServiceDto applicatioDto.SetupServiceDTO) {
 	authSvc := authservice.New(cfg.Auth)
 
-	postgresRepo ,err := postgres.New(cfg.PostgreSQL)
+	postgresRepo, err := postgres.New(cfg.PostgreSQL)
 	if err != nil {
-		fmt.Println("postgres error" ,err)
+		fmt.Println("postgres error", err)
 		return
 	}
 
 	sqlDB := postgresRepo.Conn()
 
 	userRepo := postgresuser.New(sqlDB)
-	userSvc := userservice.New(authSvc ,userRepo)
+	userSvc := userservice.New(authSvc, userRepo)
 
 	// transactionRepo := postgrestransaction.New(sqlDB)
 	// transactionSvc := transactionservice.New(transactionRepo)
@@ -77,8 +77,8 @@ func setupServices(cfg config.Config) (setupServiceDto applicatioDto.SetupServic
 	// actionSvc := actionservice.New(actionRepo)
 
 	return applicatioDto.SetupServiceDTO{
-		UserService:        &userSvc,
-		AuthService:		&authSvc,
+		UserService: 		   userSvc,
+		AuthService: 		   authSvc,
 		// ItemService:        itemSvc,
 		// ActionService:      actionSvc,
 		// TransactionService: transactionSvc,

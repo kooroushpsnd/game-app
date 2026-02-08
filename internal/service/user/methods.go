@@ -5,10 +5,11 @@ import (
 	userdto "goProject/internal/dto/user"
 	"goProject/internal/entity"
 	"goProject/internal/pkg/errmsg"
+	"goProject/internal/pkg/mapper"
 	"goProject/internal/pkg/richerror"
 )
 
-func (s Service) Login(ctx context.Context, req userdto.LoginRequestDto) (userdto.LoginResponseDto, error) {
+func (s *Service) Login(ctx context.Context, req userdto.LoginRequestDto) (userdto.LoginResponseDto, error) {
 	const op = "userservice.login"
 
 	user, err := s.repo.GetUserByEmail(ctx, req.Email)
@@ -40,18 +41,14 @@ func (s Service) Login(ctx context.Context, req userdto.LoginRequestDto) (userdt
 	}
 
 	return userdto.LoginResponseDto{
-		User: userdto.UserInfoDto{
-			ID:    user.ID,
-			Email: user.Email,
-			Name:  user.Name,
-		},
+		User: mapper.ToUserInfoDto(user),
 		Tokens: userdto.TokensDto{
 			AccessToken:  accessToken,
 			RefreshToken: refreshToken},
 	}, nil
 }
 
-func (s Service) Register(ctx context.Context, req userdto.SignupRequestDto) (userdto.SignupResponseDto, error) {
+func (s *Service) Register(ctx context.Context, req userdto.SignupRequestDto) (userdto.SignupResponseDto, error) {
 	const op = "userservice.register"
 
 	value , err := s.repo.IsEmailUnique(ctx, req.Email)
@@ -81,9 +78,41 @@ func (s Service) Register(ctx context.Context, req userdto.SignupRequestDto) (us
 	}
 
 	// return created user
-	return userdto.SignupResponseDto{User: userdto.UserInfoDto{
-		ID:    		createdUser.ID,
-		Email: 		createdUser.Email,
-		Name:  		createdUser.Name,
-	}}, nil
+	return userdto.SignupResponseDto{User: mapper.ToUserInfoDto(createdUser)}, nil
+}
+
+func (s *Service) GetProfile(ctx context.Context ,req userdto.GetProfileRequestDto) (userdto.GetProfileResponseDto ,error){
+	const op = "userservice.Profile"
+
+	user ,err := s.repo.GetUserByID(ctx ,req.UserID)
+	if err != nil {
+		return userdto.GetProfileResponseDto{} ,richerror.New(op).
+		WithErr(err).
+		WithKind(richerror.KindNotFound).
+		WithMessage(errmsg.ErrorMsg_UserNotFound)
+	}
+
+	return userdto.GetProfileResponseDto{User: mapper.ToUserInfoDto(user)} ,nil
+}
+
+func (s *Service) GetAllUsers(ctx context.Context ,req userdto.GetAllRequestUserDto) (userdto.GetAllResponseUserDto ,error){
+	const op = "userservice.GetAllUsers"
+
+	result, err := s.repo.GetAllUsers(ctx, req)
+	if err != nil {
+		return userdto.GetAllResponseUserDto{}, richerror.New(op).
+			WithErr(err).
+			WithKind(richerror.KindUnexpected).
+			WithMessage(errmsg.ErrorMsg_SomethingWentWrong)
+	}
+
+	usersDto := make([]userdto.UserInfoDto, 0, len(result))
+	for _, u := range result {
+		usersDto = append(usersDto, mapper.ToUserInfoDto(u))
+	}
+
+	return userdto.GetAllResponseUserDto{
+		Users:                 usersDto,
+		PaginationResponseDto: mapper.ToPaginationDto(req.PaginationDto, len(usersDto)),
+	}, nil
 }

@@ -2,6 +2,7 @@ package usercontroller
 
 import (
 	userdto "goProject/internal/dto/user"
+	"goProject/internal/pkg/claim"
 	"goProject/internal/pkg/httpmsg"
 	"goProject/internal/validator"
 	"net/http"
@@ -9,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (controller Controller) Login(c echo.Context) error {
+func (controller *Controller) Login(c echo.Context) error {
 	var req userdto.LoginRequestDto
 	if err := c.Bind(&req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest)
@@ -31,7 +32,7 @@ func (controller Controller) Login(c echo.Context) error {
 	return c.JSON(http.StatusOK, resp)
 }
 
-func (controller Controller) Signup(c echo.Context) error {
+func (controller *Controller) Signup(c echo.Context) error {
 	var req userdto.SignupRequestDto
 	if err := c.Bind(&req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest)
@@ -51,4 +52,19 @@ func (controller Controller) Signup(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, resp)
+}
+
+func (controller *Controller) Profile(c echo.Context) error{
+	claims := claim.GetClaimsFromEchoContext(c)
+
+	resp ,err := controller.userSvc.GetProfile(
+		c.Request().Context() ,
+		userdto.GetProfileRequestDto{UserID: claims.UserID},
+	)
+	if err != nil {
+		msg ,code := httpmsg.Error(err)
+		return echo.NewHTTPError(code ,msg)
+	}
+
+	return c.JSON(http.StatusOK ,resp)
 }
