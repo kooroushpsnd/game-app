@@ -116,3 +116,7 @@ func (s *Service) GetAllUsers(ctx context.Context ,req userdto.GetAllRequestUser
 		PaginationResponseDto: mapper.ToPaginationDto(req.PaginationDto, len(usersDto)),
 	}, nil
 }
+
+func (s *Service) Update(ctx context.Context ,userID int ,req userdto.UpdateRequestAdminDto) (userdto.UpdateResponseAdminDto ,error){
+	
+}

@@ -17,6 +17,14 @@ func New() *AppValidator {
 	v := validator.New()
 
 	v.RegisterTagNameFunc(func(fld reflect.StructField) string {
+		if name := fld.Tag.Get("query"); name != "" {
+			name = strings.Split(name, ",")[0]
+			if name != "-" {
+				return name
+			}
+			return ""
+		}
+		
 		name := fld.Tag.Get("json")
 		if name == "" {
 			return fld.Name

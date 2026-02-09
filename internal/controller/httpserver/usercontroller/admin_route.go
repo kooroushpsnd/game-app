@@ -6,5 +6,5 @@ func (c *Controller) SetRoutesAdmin(e *echo.Echo) {
 	userGroup := e.Group("/admin/users")
 
 	userGroup.GET("" ,c.GetAllUsers)
-	// userGroup.PUT("/:userID" ,c.UpdateUser)
+	userGroup.PUT("/:userID" ,c.UpdateUser)
 }
