@@ -117,6 +117,13 @@ func (s *Service) GetAllUsers(ctx context.Context ,req userdto.GetAllRequestUser
 	}, nil
 }
 
-func (s *Service) Update(ctx context.Context ,userID int ,req userdto.UpdateRequestAdminDto) (userdto.UpdateResponseAdminDto ,error){
+func (s *Service) Update(ctx context.Context ,userID uint ,req userdto.UserUpdatePatch) (userdto.UserInfoDto ,error){
+	const op = "userservice.UpdateUser"
+
+	user ,err := s.repo.UpdateUser(ctx ,userID ,req)
+	if err != nil {
+		return userdto.UserInfoDto{} ,richerror.New(op).WithErr(err)
+	}
 	
+	return mapper.ToUserInfoDto(user) ,nil
 }

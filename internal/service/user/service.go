@@ -14,6 +14,7 @@ type Repository interface {
 	GetUserByID(ctx context.Context, userID uint) (entity.User, error)
 	GetAllUsers(ctx context.Context, dto userdto.GetAllRequestUserDto) ([]entity.User, error)
 	IsEmailUnique(ctx context.Context ,email string) (bool ,error)
+	UpdateUser(ctx context.Context ,userID uint ,dto userdto.UserUpdatePatch) (entity.User ,error)
 }
 
 type AuthGenerator interface {

@@ -4,6 +4,7 @@ import (
 	userdto "goProject/internal/dto/user"
 	"goProject/internal/pkg/helper"
 	"goProject/internal/pkg/httpmsg"
+	"goProject/internal/pkg/mapper"
 	"goProject/internal/validator"
 	"net/http"
 	"strconv"
@@ -29,7 +30,7 @@ func (controller *Controller) GetAllUsers(c echo.Context) error{
 	return c.JSON(http.StatusOK, resp)
 }
 
-func (controller *Controller) UpdateUser(c echo.Context) error{
+func (controller *Controller) UpdateUserAdmin(c echo.Context) error{
 	idStr := c.Param("userID")
     userID, err := strconv.Atoi(idStr)
     if err != nil {
@@ -49,7 +50,7 @@ func (controller *Controller) UpdateUser(c echo.Context) error{
 		})
 	}
 
-	resp, err := controller.userSvc.Update(c.Request().Context(),userID ,req)
+	resp, err := controller.userSvc.Update(c.Request().Context(),uint(userID) ,mapper.AdminDtoToPatch(req))
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

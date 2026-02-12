@@ -12,4 +12,5 @@ func (c *Controller) SetRoutesUser(e *echo.Echo) {
 	userGroup.GET("/profile", c.Profile, middleware.Auth(c.authSvc, c.authConfig))
 	userGroup.POST("/login", c.Login)
 	userGroup.POST("/signup", c.Signup)
+	userGroup.PATCH("" ,c.UpdateUser, middleware.Auth(c.authSvc, c.authConfig))
 }

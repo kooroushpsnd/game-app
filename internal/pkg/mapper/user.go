@@ -22,3 +22,25 @@ func ToUserInfoDtos(users []entity.User) []userdto.UserInfoDto {
 	}
 	return out
 }
+
+func AdminDtoToPatch(req userdto.UpdateRequestAdminDto) userdto.UserUpdatePatch {
+    patch := userdto.UserUpdatePatch{
+        Email:  req.Email,
+        Name:   req.Name,
+        Status: req.Status,
+    }
+
+    if req.Role != nil {
+        role := entity.MapToRoleEntity(*req.Role)
+        patch.Role = &role
+    }
+
+    return patch
+}
+
+
+func UserDtoToPatch(req userdto.UpdateRequestUserDto) userdto.UserUpdatePatch {
+    return userdto.UserUpdatePatch{
+        Name: req.Name,
+    }
+}
