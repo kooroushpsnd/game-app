@@ -93,3 +93,7 @@ func (controller *Controller) UpdateUser(c echo.Context) error{
 
 	return c.JSON(http.StatusOK, resp)
 }
+
+func (controller *Controller) VerifyEmail(c echo.Context) error{
+	
+}

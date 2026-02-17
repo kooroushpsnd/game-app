@@ -9,8 +9,11 @@ import (
 func (c *Controller) SetRoutesUser(e *echo.Echo) {
 	userGroup := e.Group("/users")
 
-	userGroup.GET("/profile", c.Profile, middleware.Auth(c.authSvc, c.authConfig))
 	userGroup.POST("/login", c.Login)
 	userGroup.POST("/signup", c.Signup)
-	userGroup.PATCH("" ,c.UpdateUser, middleware.Auth(c.authSvc, c.authConfig))
+	userGroup.POST("/verify_email" ,c.VerifyEmail)
+
+	userGroup.GET("/profile", c.Profile, middleware.Auth(c.authSvc, c.authConfig))
+	
+	userGroup.PATCH("/" ,c.UpdateUser, middleware.Auth(c.authSvc, c.authConfig))
 }

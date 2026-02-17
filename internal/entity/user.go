@@ -7,10 +7,11 @@ import (
 type User struct {
 	ID          uint
 	Email       string
+	EmailVerify bool
 	Name        string
 	Password    string
 	Role        Role
-	Status		bool
+	Status      bool
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

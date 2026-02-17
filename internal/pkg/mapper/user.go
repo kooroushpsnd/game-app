@@ -7,10 +7,10 @@ import (
 
 func ToUserInfoDto(u entity.User) userdto.UserInfoDto {
 	return userdto.UserInfoDto{
-		ID: u.ID,
-		Email: u.Email,
-		Name: u.Name,
-		Role: u.Role.String(),
+		ID:     u.ID,
+		Email:  u.Email,
+		Name:   u.Name,
+		Role:   u.Role.String(),
 		Status: u.Status,
 	}
 }
@@ -24,23 +24,18 @@ func ToUserInfoDtos(users []entity.User) []userdto.UserInfoDto {
 }
 
 func AdminDtoToPatch(req userdto.UpdateRequestAdminDto) userdto.UserUpdatePatch {
-    patch := userdto.UserUpdatePatch{
-        Email:  req.Email,
-        Name:   req.Name,
-        Status: req.Status,
-    }
+	patch := userdto.UserUpdatePatch{
+		Email:  req.Email,
+		Name:   req.Name,
+		Status: req.Status,
+		Role:   req.Role,
+	}
 
-    if req.Role != nil {
-        role := entity.MapToRoleEntity(*req.Role)
-        patch.Role = &role
-    }
-
-    return patch
+	return patch
 }
 
-
 func UserDtoToPatch(req userdto.UpdateRequestUserDto) userdto.UserUpdatePatch {
-    return userdto.UserUpdatePatch{
-        Name: req.Name,
-    }
+	return userdto.UserUpdatePatch{
+		Name: req.Name,
+	}
 }

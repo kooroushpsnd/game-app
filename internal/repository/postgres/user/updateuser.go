@@ -5,10 +5,18 @@ import (
 	"fmt"
 	userdto "goProject/internal/dto/user"
 	"goProject/internal/entity"
+	"goProject/internal/pkg/errmsg"
+	"goProject/internal/pkg/richerror"
 	"strings"
 )
 
 func (r *Repo) UpdateUser(ctx context.Context ,userID uint ,req userdto.UserUpdatePatch) (entity.User, error) {
+	const op = "postgres.UpdateUser"
+	userExist ,err := r.GetUserByID(ctx ,userID)
+	if err != nil {
+		return entity.User{} ,err
+	}
+
 	sets := make([]string, 0, 4)
     args := make([]any, 0, 5)
     idx := 1
@@ -35,7 +43,7 @@ func (r *Repo) UpdateUser(ctx context.Context ,userID uint ,req userdto.UserUpda
     }
 
     if len(sets) == 0 {
-        return r.GetUserByID(ctx, userID)
+        return userExist ,nil
     }
 
     sets = append(sets, "updated_at = NOW()")
@@ -48,9 +56,12 @@ func (r *Repo) UpdateUser(ctx context.Context ,userID uint ,req userdto.UserUpda
         RETURNING id, email, name, password, role, status, created_at, updated_at
     `, strings.Join(sets, ", "), idx)
 
-    var u entity.User
-    err := r.db.QueryRowContext(ctx, q, args...).Scan(
-        &u.ID, &u.Email, &u.Name, &u.Password, &u.Role, &u.Status, &u.CreatedAt, &u.UpdatedAt,
-    )
-    return u, err
+    row := r.db.QueryRowContext(ctx, q, args...)
+	user ,err := scanUser(row)
+	if err != nil {
+		return entity.User{}, richerror.New(op).
+			WithErr(err).WithMessage(errmsg.ErrorMsg_CantScanQueryResult).WithKind(richerror.KindInvalid)
+	}
+
+    return user, err
 }

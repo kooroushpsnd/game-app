@@ -6,6 +6,8 @@ http_server:
 
 application:
   port: 8080
+  email_code_expiration_date_minute: 10m
+  email_code_attempts_max: 3
 
 postgresql:
   port: 5433

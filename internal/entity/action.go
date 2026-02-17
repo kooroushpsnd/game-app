@@ -3,11 +3,11 @@ package entity
 import "time"
 
 type Action struct {
-	ID     uint `gorm:"primaryKey;autoIncrement"`
-	ItemID uint `gorm:"not null"`
-	Date   time.Time `gorm:"not null"`
-	UserID uint `gorm:"not null"`
-	Status ActionStatus `gorm:"not null"`
+	ID     uint 
+	ItemID uint
+	Date   time.Time 
+	UserID uint
+	Status ActionStatus
 }
 
 type ActionStatus string

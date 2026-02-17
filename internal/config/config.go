@@ -7,8 +7,10 @@ import (
 )
 
 type Application struct {
-	GracefulShutdownTimeout time.Duration `koanf:"graceful_shutdown_timeout"`
-	Port                    int           `koanf:"port"`
+	EmailCodeExpirationDateMinute time.Duration `koanf:"email_code_expiration_date_minute"`
+	EmailCodeAttemptsMax          int           `koanf:"email_code_attempts_max"`
+	GracefulShutdownTimeout       time.Duration `koanf:"graceful_shutdown_timeout"`
+	Port                          int           `koanf:"port"`
 }
 
 type HTTPServer struct {

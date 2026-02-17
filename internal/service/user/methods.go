@@ -127,3 +127,14 @@ func (s *Service) Update(ctx context.Context ,userID uint ,req userdto.UserUpdat
 	
 	return mapper.ToUserInfoDto(user) ,nil
 }
+
+func (s *Service) GetUserByEmail(ctx context.Context ,email string) (entity.User ,error){
+	const op = "userservice.GetUserByEmail"
+
+	user ,err := s.repo.GetUserByEmail(ctx ,email)
+	if err != nil {
+		return entity.User{} ,richerror.New(op).WithErr(err)
+	}
+	
+	return user ,nil
+}
