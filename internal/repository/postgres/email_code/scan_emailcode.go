@@ -16,6 +16,7 @@ func scanEmailCode(scanner postgres.Scanner) (entity.EmailCode, error) {
 		&emailCode.Attempts ,
 		&emailCode.ExpirationDate ,
 		&emailCode.UserID ,
+		&emailCode.CreatedAt,
 	)
 
 	return emailCode, err

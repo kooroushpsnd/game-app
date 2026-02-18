@@ -1,6 +1,7 @@
 package usercontroller
 
 import (
+	emailcodedto "goProject/internal/dto/email_code"
 	userdto "goProject/internal/dto/user"
 	"goProject/internal/pkg/claim"
 	"goProject/internal/pkg/httpmsg"
@@ -95,5 +96,45 @@ func (controller *Controller) UpdateUser(c echo.Context) error{
 }
 
 func (controller *Controller) VerifyEmail(c echo.Context) error{
-	
+	var req emailcodedto.VerifyEmailCodeDto
+	if err := c.Bind(&req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest)
+	}
+
+	if err := c.Validate(&req); err != nil {
+		msg, code := httpmsg.Error(err)
+		return c.JSON(code, echo.Map{
+			"message": msg ,
+			"errors": validator.FieldErrors(err),
+		})
+	}
+
+	_, err := controller.emailSvc.VerifyEmailCode(c.Request().Context(), req)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, "email verified successfully")
+}
+
+func (controller *Controller) SendEmailCode(c echo.Context) error{
+	var req emailcodedto.SendEmailCodeDto
+	if err := c.Bind(&req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest)
+	}
+
+	if err := c.Validate(&req); err != nil {
+		msg, code := httpmsg.Error(err)
+		return c.JSON(code, echo.Map{
+			"message": msg ,
+			"errors": validator.FieldErrors(err),
+		})
+	}
+
+	err := controller.emailSvc.SendEmail(c.Request().Context(), req)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, "email sent successfully")
 }

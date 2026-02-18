@@ -10,4 +10,5 @@ type EmailCode struct {
 	Attempts       int
 	ExpirationDate time.Time
 	UserID         uint
+	CreatedAt      time.Time
 }

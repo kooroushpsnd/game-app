@@ -9,7 +9,13 @@ import (
 	"os"
 )
 
-func GenerateOTP(ctx context.Context ,n int) (string, error) {
+type MailerAdapter struct{}
+
+func NewSMTPEmailAdapter() *MailerAdapter {
+	return &MailerAdapter{}
+}
+
+func (adaptor *MailerAdapter) GenerateOTP(ctx context.Context ,n int) (string, error) {
 	b := make([]byte, n)
 	if _, err := rand.Read(b); err != nil {
 		return "", err
@@ -17,7 +23,7 @@ func GenerateOTP(ctx context.Context ,n int) (string, error) {
 	return hex.EncodeToString(b), nil
 }
 
-func SendEmailSMTP(to, subject, body string) error {
+func (adaptor *MailerAdapter) SendEmail(ctx context.Context ,to, subject, body string) error {
 	host := os.Getenv("SMTP_HOST")
 	port := os.Getenv("SMTP_PORT")
 	user := os.Getenv("SMTP_USER")
