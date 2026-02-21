@@ -3,16 +3,23 @@ package postgresemailcode
 import (
 	"context"
 	emailcodedto "goProject/internal/dto/email_code"
+	"goProject/internal/entity"
 	"goProject/internal/pkg/errmsg"
 	"goProject/internal/pkg/richerror"
+	"log"
+	"time"
 )
 
 func (r *Repo) CreateEmailCode(ctx context.Context, req emailcodedto.CreateEmailCodeDto) error {
 	const op = "postgresemailcode.create"
 
+	log.Println("EXP_MIN:", r.config.Application.EmailCodeExpirationDateMinute)
+	exp := time.Now().Add(r.config.Application.EmailCodeExpirationDateMinute)
+	log.Println(exp)
+	
 	const q = `
-		INSERT INTO email_codes (email, hash_code, status, attempts, expiration_date, user_id)
-		VALUES ($1, $2, $3, $4, $5, $6)
+		INSERT INTO email_codes (email, hash_code, status, attempts, expiration_date, user_id ,created_at)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
 	`
 
 	_, err := r.db.ExecContext(
@@ -20,10 +27,11 @@ func (r *Repo) CreateEmailCode(ctx context.Context, req emailcodedto.CreateEmail
 		q,
 		req.Email,
 		req.HashCode,
-		true,
-		req.Attempts,
-		req.ExpirationDate,
+		entity.EmailCodeStatusActive,
+		0,
+		exp,
 		req.UserID,
+		time.Now(),
 	)
 	if err != nil {
 		return richerror.New(op).WithErr(err).

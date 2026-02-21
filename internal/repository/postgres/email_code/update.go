@@ -42,7 +42,7 @@ func (r *Repo) UpdateEmailCode(ctx context.Context, email string, req emailcoded
         UPDATE email_codes
         SET %s
         WHERE id = $%d
-        RETURNING id, email, hash_code, status, attempts, expiration_date, user_id
+        RETURNING id, email, hash_code, attempts, expiration_date, user_id, created_at, status
     `, strings.Join(sets, ", "), idx)
 
 	row := r.db.QueryRowContext(ctx, q, args...)

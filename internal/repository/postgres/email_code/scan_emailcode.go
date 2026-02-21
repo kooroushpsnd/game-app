@@ -12,11 +12,11 @@ func scanEmailCode(scanner postgres.Scanner) (entity.EmailCode, error) {
 		&emailCode.ID ,
 		&emailCode.Email ,
 		&emailCode.HashCode ,
-		&emailCode.Status ,
 		&emailCode.Attempts ,
 		&emailCode.ExpirationDate ,
 		&emailCode.UserID ,
 		&emailCode.CreatedAt,
+		&emailCode.Status ,
 	)
 
 	return emailCode, err

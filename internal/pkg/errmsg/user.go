@@ -1,9 +1,9 @@
 package errmsg
 
 const (
-	ErrorMsg_UserNotFound   = "User Not Found"
-	ErrorMsg_UserDuplicated = "User Duplicated"
-	ErrorMsg_UserCreation   = "User Creation Error"
-	ErrorMsg_WrongPassword   = "Email Or Password Are Incorrect"
-	ErrorMsg_UserAlreadyVerified   = "User's Email is Already Verified!"
+	ErrorMsg_UserNotFound        = "User Not Found"
+	ErrorMsg_UserDuplicated      = "User Duplicated"
+	ErrorMsg_UserCreation        = "User Creation Error"
+	ErrorMsg_WrongPassword       = "Email Or Password Are Incorrect"
+	ErrorMsg_UserAlreadyVerified = "User's Email is Already Verified!"
 )

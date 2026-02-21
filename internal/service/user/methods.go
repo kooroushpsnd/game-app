@@ -7,6 +7,7 @@ import (
 	"goProject/internal/pkg/errmsg"
 	"goProject/internal/pkg/mapper"
 	"goProject/internal/pkg/richerror"
+	"log"
 )
 
 func (s *Service) Login(ctx context.Context, req userdto.LoginRequestDto) (userdto.LoginResponseDto, error) {
@@ -22,7 +23,8 @@ func (s *Service) Login(ctx context.Context, req userdto.LoginRequestDto) (userd
 				"Email": req.Email,
 			})
 	}
-
+	
+	log.Println(1)
 	if user.Password != getMD5Hash(req.Password) {
 		return userdto.LoginResponseDto{}, richerror.New(op).
 			WithErr(err).WithKind(richerror.KindInvalid).WithMessage(errmsg.ErrorMsg_WrongPassword)
