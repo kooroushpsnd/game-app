@@ -1,8 +1,15 @@
 # --- build stage ---
-FROM golang:1.22-alpine AS builder
+FROM golang:1.22-alpine3.20 AS builder
 
 WORKDIR /app
-RUN apk add --no-cache git ca-certificates
+
+# robust apk install (retry) + pinned alpine
+RUN set -eux; \
+  for i in 1 2 3 4 5; do \
+    apk update && apk add --no-cache git ca-certificates && break; \
+    echo "apk failed... retrying ($i)"; \
+    sleep 2; \
+  done
 
 COPY go.mod go.sum ./
 RUN go mod download
@@ -22,17 +29,12 @@ FROM alpine:3.20
 WORKDIR /app
 RUN apk add --no-cache ca-certificates netcat-openbsd bash
 
-# binaries
 COPY --from=builder /app/server /app/server
 COPY --from=builder /go/bin/sql-migrate /usr/local/bin/sql-migrate
 
-# runtime files needed:
-# migrations + sql-migrate config + app config
 COPY --from=builder /app/internal/repository/postgres/migrations /app/internal/repository/postgres/migrations
 COPY --from=builder /app/dbconfig.yml /app/dbconfig.yml
 COPY --from=builder /app/config.yml /app/config.yml
 
-# expose both ports your app uses
 EXPOSE 8080 8081
-
 CMD ["/app/server"]
