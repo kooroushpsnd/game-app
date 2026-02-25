@@ -1,9 +1,8 @@
 # --- build stage ---
-FROM golang:1.22-alpine3.20 AS builder
+FROM golang:1.24.1-alpine3.20 AS builder
 
 WORKDIR /app
 
-# robust apk install (retry) + pinned alpine
 RUN set -eux; \
   for i in 1 2 3 4 5; do \
     apk update && apk add --no-cache git ca-certificates && break; \
@@ -16,12 +15,8 @@ RUN go mod download
 
 COPY . .
 
-# build from cmd/api
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o server ./cmd/api
-
-# install sql-migrate
 RUN go install github.com/rubenv/sql-migrate/...@latest
-
 
 # --- runtime stage ---
 FROM alpine:3.20
