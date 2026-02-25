@@ -1,0 +1,31 @@
+services:
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: goproject-migrate
+    env_file:
+      - .env
+    command: >
+      sh -lc "
+      echo 'waiting for postgres at ${DB_HOST}:${DB_PORT}...' &&
+      until nc -z ${DB_HOST} ${DB_PORT}; do sleep 1; done &&
+      echo 'postgres is up, running migrations...' &&
+      sql-migrate up -env=development -config=/app/dbconfig.yml
+      "
+    restart: "no"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: goproject-app
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped

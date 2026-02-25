@@ -3,22 +3,14 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
+	"os"
 	"time"
 
 	_ "github.com/lib/pq"
 )
 
-type Config struct {
-	Username string `koanf:"username"`
-	Password string `koanf:"password"`
-	Port     int    `koanf:"port"`
-	Host     string `koanf:"host"`
-	DBName   string `koanf:"db_name"`
-	SSLMode  string `koanf:"ssl_mode"`
-}
 
 type PostgreSQLDB struct {
-	config Config
 	db     *sql.DB
 }
 
@@ -26,15 +18,15 @@ func (p *PostgreSQLDB) Conn() *sql.DB { return p.db }
 
 func (p *PostgreSQLDB) Close() error { return p.db.Close() }
 
-func New(config Config) (*PostgreSQLDB, error) {
+func New() (*PostgreSQLDB, error) {
 	dsn := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%d sslmode=%s",
-		config.Host,
-		config.Username,
-		config.Password,
-		config.DBName,
-		config.Port,
-		config.SSLMode,
+		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_NAME"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_SSLMODE"),
 	)
 
 	db, err := sql.Open("postgres", dsn)
@@ -51,5 +43,5 @@ func New(config Config) (*PostgreSQLDB, error) {
 		return nil, fmt.Errorf("ping postgres: %w", err)
 	}
 
-	return &PostgreSQLDB{config: config, db: db}, nil
+	return &PostgreSQLDB{db: db}, nil
 }

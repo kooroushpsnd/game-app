@@ -9,11 +9,3 @@ application:
   email_code_expiration_date_minute: 10m
   email_code_attempts_max: 3
   email_code_resend_minute: 1m
-
-postgresql:
-  port: 5433
-  host: localhost
-  db_name: goproject_db
-  username: postgres
-  password: p.123456
-  ssl_mode: disable

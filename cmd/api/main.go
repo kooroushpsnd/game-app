@@ -62,7 +62,7 @@ func main() {
 func setupServices(cfg config.Config) (setupServiceDto applicatioDto.SetupServiceDTO) {
 	authSvc := authservice.New(cfg.Auth)
 
-	postgresRepo, err := postgres.New(cfg.PostgreSQL)
+	postgresRepo, err := postgres.New()
 	if err != nil {
 		fmt.Println("postgres error", err)
 		return
