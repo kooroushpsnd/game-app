@@ -9,6 +9,7 @@ func ToUserInfoDto(u entity.User) userdto.UserInfoDto {
 	return userdto.UserInfoDto{
 		ID:     u.ID,
 		Email:  u.Email,
+		EmailVerify: u.EmailVerify,
 		Name:   u.Name,
 		Role:   u.Role.String(),
 		Status: u.Status,

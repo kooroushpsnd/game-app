@@ -4,10 +4,13 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log"
 	"time"
 )
 
 func (r *Repo) CheckEmailCodeReadyToResend(ctx context.Context, email string) (bool, error) {
+	const op = "postgresemailcode.CheckEmailCodeReadyToResend"
+	
 	codeExist ,err := r.GetLatestEmailCode(ctx ,email)
 	if(err != nil){
 		if errors.Is(err, sql.ErrNoRows) {
@@ -16,8 +19,12 @@ func (r *Repo) CheckEmailCodeReadyToResend(ctx context.Context, email string) (b
 		return false, err
 	}
 
-	if time.Since(codeExist.CreatedAt) >= (time.Minute * r.config.Application.EmailCodeExpirationDateMinute) {
+
+	log.Println(r.config.Application.EmailCodeResendMinute)
+	resendAfter := r.config.Application.EmailCodeResendMinute
+	if time.Since(codeExist.CreatedAt) >= resendAfter {
 		return true, nil
 	}
-	return true ,nil
+
+	return false , nil
 }

@@ -3,10 +3,10 @@ package main
 import (
 	"context"
 	"fmt"
+	mailer "goProject/internal/adapter/email"
 	"goProject/internal/config"
 	"goProject/internal/controller/httpserver"
 	applicatioDto "goProject/internal/dto/application"
-	// emailPkg "goProject/internal/pkg/email"
 	"goProject/internal/repository/postgres"
 
 	// postgresaction "goProject/internal/repository/postgres/action"
@@ -62,7 +62,7 @@ func main() {
 func setupServices(cfg config.Config) (setupServiceDto applicatioDto.SetupServiceDTO) {
 	authSvc := authservice.New(cfg.Auth)
 
-	postgresRepo, err := postgres.New(cfg.PostgreSQL)
+	postgresRepo, err := postgres.New()
 	if err != nil {
 		fmt.Println("postgres error", err)
 		return
@@ -73,9 +73,9 @@ func setupServices(cfg config.Config) (setupServiceDto applicatioDto.SetupServic
 	userRepo := postgresuser.New(sqlDB)
 	userSvc := userservice.New(authSvc, userRepo)
 
-	// emailRepo := postgresemailcode.New(sqlDB)
-	// mailerAdaptor := emailPkg.NewSMTPEmailAdapter()
-	// emailSvc := emailservice.New(userSvc ,emailRepo ,mailerAdaptor)
+	emailRepo := postgresemailcode.New(sqlDB ,cfg)
+	mailerAdaptor := mailer.NewSMTPEmailAdapter()
+	emailSvc := emailservice.New(userSvc ,emailRepo ,mailerAdaptor ,cfg.Application)
 
 	// transactionRepo := postgrestransaction.New(sqlDB)
 	// transactionSvc := transactionservice.New(transactionRepo)

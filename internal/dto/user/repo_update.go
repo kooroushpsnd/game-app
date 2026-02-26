@@ -1,8 +1,9 @@
 package userdto
 
 type UserUpdatePatch struct {
-	Email  *string
-	Name   *string
-	Role   *string
-	Status *bool
+	Email       *string
+	EmailVerify *bool
+	Name        *string
+	Role        *string
+	Status      *bool
 }

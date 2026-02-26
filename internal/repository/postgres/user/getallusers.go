@@ -12,8 +12,7 @@ import (
 
 func (r *Repo) GetAllUsers(ctx context.Context, req userdto.GetAllRequestUserDto) ([]entity.User, error) {
 	const op = "postgresuser.GetAllUsers"
-	const userColumns = `id, email, name, password, role, status, created_at, updated_at`
-
+	
 	conds := make([]string, 0, 3)
 	args := make([]any, 0, 5)
 	i := 1
@@ -58,7 +57,7 @@ func (r *Repo) GetAllUsers(ctx context.Context, req userdto.GetAllRequestUserDto
 		%s
 		ORDER BY id DESC
 		LIMIT $%d OFFSET $%d
-	`,userColumns , where, i, i+1)
+	`,UserColumns , where, i, i+1)
 
 	args = append(args, limit, offset)
 

@@ -10,6 +10,6 @@ type Repo struct {
 	db postgres.DBTX
 }
 
-func New(db postgres.DBTX) *Repo{
-	return &Repo{db: db}
+func New(db postgres.DBTX, config config.Config) *Repo{
+	return &Repo{db: db, config: config}
 }

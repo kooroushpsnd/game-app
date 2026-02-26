@@ -10,9 +10,9 @@ import (
 func (r *Repo) IsEmailUnique(ctx context.Context, email string) (bool, error) {
 	const op = "postgres.IsEmailUnique"
 
-	const q = "select * from users where email = $1"
+	const q = "select %s from users where email = $1"
 
-	row := r.db.QueryRowContext(ctx, q, email)
+	row := r.db.QueryRowContext(ctx, q, UserColumns, email)
 	_, err := scanUser(row)
 	if err != nil {
 		if err == sql.ErrNoRows {

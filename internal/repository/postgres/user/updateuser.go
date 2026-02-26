@@ -17,8 +17,8 @@ func (r *Repo) UpdateUser(ctx context.Context ,userID uint ,req userdto.UserUpda
 		return entity.User{} ,err
 	}
 
-	sets := make([]string, 0, 4)
-    args := make([]any, 0, 5)
+	sets := make([]string, 0, 5)
+    args := make([]any, 0, 6)
     idx := 1
 
     if req.Email != nil {
@@ -41,6 +41,11 @@ func (r *Repo) UpdateUser(ctx context.Context ,userID uint ,req userdto.UserUpda
         args = append(args, *req.Status)
         idx++
     }
+    if req.EmailVerify != nil {
+        sets = append(sets, fmt.Sprintf("email_verify = $%d", idx))
+        args = append(args, *req.EmailVerify)
+        idx++
+    }
 
     if len(sets) == 0 {
         return userExist ,nil
@@ -53,8 +58,8 @@ func (r *Repo) UpdateUser(ctx context.Context ,userID uint ,req userdto.UserUpda
         UPDATE users
         SET %s
         WHERE id = $%d
-        RETURNING id, email, name, password, role, status, created_at, updated_at
-    `, strings.Join(sets, ", "), idx)
+        RETURNING %s
+    `, strings.Join(sets, ", "), idx, UserColumns)
 
     row := r.db.QueryRowContext(ctx, q, args...)
 	user ,err := scanUser(row)

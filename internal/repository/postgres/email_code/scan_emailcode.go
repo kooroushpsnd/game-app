@@ -21,3 +21,5 @@ func scanEmailCode(scanner postgres.Scanner) (entity.EmailCode, error) {
 
 	return emailCode, err
 }
+
+const EmailColumns = `id, email, hash_code, status, attempts, expiration_date, user_id, created_at`
