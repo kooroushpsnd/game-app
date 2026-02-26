@@ -11,9 +11,9 @@ import (
 func (r *Repo) GetUserByID(ctx context.Context, userID uint) (entity.User, error) {
 	const op = "postgres.getUserByID"
 
-	const q = "select * from users where id = $1"
+	const q = "select %s from users where id = $1"
 
-	row := r.db.QueryRowContext(ctx, q, userID)
+	row := r.db.QueryRowContext(ctx, q, UserColumns, userID)
 	user, err := scanUser(row)
 	if err != nil {
 		if err == sql.ErrNoRows {

@@ -7,16 +7,13 @@ import (
 	"goProject/internal/entity"
 	"goProject/internal/pkg/errmsg"
 	"goProject/internal/pkg/richerror"
-	"log"
 	"strings"
 )
 
 func (r *Repo) UpdateUser(ctx context.Context ,userID uint ,req userdto.UserUpdatePatch) (entity.User, error) {
 	const op = "postgres.UpdateUser"
-    log.Println("first update")
 	userExist ,err := r.GetUserByID(ctx ,userID)
 	if err != nil {
-        log.Println(err)
 		return entity.User{} ,err
 	}
 
@@ -51,7 +48,6 @@ func (r *Repo) UpdateUser(ctx context.Context ,userID uint ,req userdto.UserUpda
     }
 
     if len(sets) == 0 {
-        log.Println("zero" ,sets)
         return userExist ,nil
     }
 
@@ -62,14 +58,12 @@ func (r *Repo) UpdateUser(ctx context.Context ,userID uint ,req userdto.UserUpda
         UPDATE users
         SET %s
         WHERE id = $%d
-        RETURNING id, email, name, password, role, status, created_at, updated_at, email_verify
-    `, strings.Join(sets, ", "), idx)
+        RETURNING %s
+    `, strings.Join(sets, ", "), idx, UserColumns)
 
     row := r.db.QueryRowContext(ctx, q, args...)
 	user ,err := scanUser(row)
-    log.Println(user)
 	if err != nil {
-        log.Println(err)
 		return entity.User{}, richerror.New(op).
 			WithErr(err).WithMessage(errmsg.ErrorMsg_CantScanQueryResult).WithKind(richerror.KindInvalid)
 	}

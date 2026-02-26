@@ -2,6 +2,7 @@ package postgresuser
 
 import (
 	"context"
+	"fmt"
 	"goProject/internal/entity"
 	"goProject/internal/pkg/errmsg"
 	"goProject/internal/pkg/richerror"
@@ -10,11 +11,11 @@ import (
 func (r *Repo) Register(ctx context.Context, u entity.User) (entity.User, error) {
 	const op = "postgres.Register"
 
-	const q = `
-		INSERT INTO users (email, name, password, role, created_at, updated_at)
+	q := fmt.Sprintf(`
+		INSERT INTO users (email, name, password, role, created_at, updated_at) 
 		VALUES ($1, $2, $3, $4, NOW(), NOW())
-		RETURNING id, email, name, password, role, status, created_at, updated_at
-	`
+		RETURNING %s
+	`, UserColumns)
 
 	row := r.db.QueryRowContext(
 		ctx,
