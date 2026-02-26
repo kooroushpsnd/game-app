@@ -25,7 +25,7 @@ func New(config config.Config, services applicatioDto.SetupServiceDTO) *Server {
 		config: config,
 		userController: usercontroller.New(
 			config.Auth,
-			services.EmailService,
+			// services.EmailService,
 			services.AuthService,
 			services.UserService,
 		),

@@ -11,8 +11,8 @@ func (c *Controller) SetRoutesUser(e *echo.Echo) {
 
 	userGroup.POST("/login", c.Login)
 	userGroup.POST("/signup", c.Signup)
-	userGroup.POST("/send_email_code" ,c.SendEmailCode)
-	userGroup.POST("/verify_email" ,c.VerifyEmail)
+	// userGroup.POST("/send_email_code" ,c.SendEmailCode)
+	// userGroup.POST("/verify_email" ,c.VerifyEmail)
 
 	userGroup.GET("/profile", c.Profile, middleware.Auth(c.authSvc, c.authConfig))
 	

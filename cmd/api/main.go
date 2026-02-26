@@ -6,18 +6,18 @@ import (
 	"goProject/internal/config"
 	"goProject/internal/controller/httpserver"
 	applicatioDto "goProject/internal/dto/application"
-	emailPkg "goProject/internal/pkg/email"
+	// emailPkg "goProject/internal/pkg/email"
 	"goProject/internal/repository/postgres"
 
 	// postgresaction "goProject/internal/repository/postgres/action"
 	// postgresitem "goProject/internal/repository/postgres/item"
 	// postgrestransaction "goProject/internal/repository/postgres/transaction"
-	postgresemailcode "goProject/internal/repository/postgres/email_code"
+	// postgresemailcode "goProject/internal/repository/postgres/email_code"
 	postgresuser "goProject/internal/repository/postgres/user"
 
 	// actionservice "goProject/internal/service/action"
 	authservice "goProject/internal/service/auth"
-	emailservice "goProject/internal/service/email"
+	// emailservice "goProject/internal/service/email"
 
 	// itemservice "goProject/internal/service/item"
 	// transactionservice "goProject/internal/service/transaction"
@@ -73,9 +73,9 @@ func setupServices(cfg config.Config) (setupServiceDto applicatioDto.SetupServic
 	userRepo := postgresuser.New(sqlDB)
 	userSvc := userservice.New(authSvc, userRepo)
 
-	emailRepo := postgresemailcode.New(sqlDB)
-	mailerAdaptor := emailPkg.NewSMTPEmailAdapter()
-	emailSvc := emailservice.New(userSvc ,emailRepo ,mailerAdaptor)
+	// emailRepo := postgresemailcode.New(sqlDB)
+	// mailerAdaptor := emailPkg.NewSMTPEmailAdapter()
+	// emailSvc := emailservice.New(userSvc ,emailRepo ,mailerAdaptor)
 
 	// transactionRepo := postgrestransaction.New(sqlDB)
 	// transactionSvc := transactionservice.New(transactionRepo)
@@ -89,7 +89,7 @@ func setupServices(cfg config.Config) (setupServiceDto applicatioDto.SetupServic
 	return applicatioDto.SetupServiceDTO{
 		UserService:  userSvc,
 		AuthService:  authSvc,
-		EmailService: emailSvc,
+		// EmailService: emailSvc,
 		// ItemService:        itemSvc,
 		// ActionService:      actionSvc,
 		// TransactionService: transactionSvc,

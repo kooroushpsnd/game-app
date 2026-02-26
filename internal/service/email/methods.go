@@ -26,6 +26,6 @@ func (s *Service) SendEmail(ctx context.Context ,req emailcodedto.SendEmailCodeD
 	return nil
 }
 
-func (s *Service) VerifyEmailCode(ctx context.Context ,req emailcodedto.VerifyEmailCodeDto) (bool ,error){
+// func (s *Service) VerifyEmailCode(ctx context.Context ,req emailcodedto.VerifyEmailCodeDto) (bool ,error){
 
-}
+// }
