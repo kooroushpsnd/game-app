@@ -6,16 +6,13 @@ import (
 	"goProject/internal/entity"
 	"goProject/internal/pkg/errmsg"
 	"goProject/internal/pkg/richerror"
-	"log"
 	"time"
 )
 
 func (r *Repo) CreateEmailCode(ctx context.Context, req emailcodedto.CreateEmailCodeDto) error {
 	const op = "postgresemailcode.create"
 
-	log.Println("EXP_MIN:", r.config.Application.EmailCodeExpirationDateMinute)
 	exp := time.Now().Add(r.config.Application.EmailCodeExpirationDateMinute)
-	log.Println(exp)
 	
 	const q = `
 		INSERT INTO email_codes (email, hash_code, status, attempts, expiration_date, user_id ,created_at)

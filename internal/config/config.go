@@ -1,6 +1,7 @@
 package config
 
 import (
+	"goProject/internal/adapter/redis"
 	authservice "goProject/internal/service/auth"
 	"time"
 )
@@ -21,4 +22,5 @@ type Config struct {
 	Application Application        `koanf:"application"`
 	HTTPServer  HTTPServer         `koanf:"http_server"`
 	Auth        authservice.Config `koanf:"auth"`
+	Redis       redis.Config       `koanf:"redis"`
 }

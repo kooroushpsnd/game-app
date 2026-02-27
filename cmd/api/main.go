@@ -4,23 +4,18 @@ import (
 	"context"
 	"fmt"
 	mailer "goProject/internal/adapter/email"
+	"goProject/internal/adapter/redis"
 	"goProject/internal/config"
 	"goProject/internal/controller/httpserver"
 	applicatioDto "goProject/internal/dto/application"
 	"goProject/internal/repository/postgres"
 
-	// postgresaction "goProject/internal/repository/postgres/action"
-	// postgresitem "goProject/internal/repository/postgres/item"
-	// postgrestransaction "goProject/internal/repository/postgres/transaction"
-	// postgresemailcode "goProject/internal/repository/postgres/email_code"
+	postgresemailcode "goProject/internal/repository/postgres/email_code"
 	postgresuser "goProject/internal/repository/postgres/user"
 
-	// actionservice "goProject/internal/service/action"
 	authservice "goProject/internal/service/auth"
-	// emailservice "goProject/internal/service/email"
+	emailservice "goProject/internal/service/email"
 
-	// itemservice "goProject/internal/service/item"
-	// transactionservice "goProject/internal/service/transaction"
 	userservice "goProject/internal/service/user"
 	"net/http"
 	"os"
@@ -61,6 +56,7 @@ func main() {
 
 func setupServices(cfg config.Config) (setupServiceDto applicatioDto.SetupServiceDTO) {
 	authSvc := authservice.New(cfg.Auth)
+	redisAdaptor := redis.New(cfg.Redis)
 
 	postgresRepo, err := postgres.New()
 	if err != nil {
@@ -70,7 +66,7 @@ func setupServices(cfg config.Config) (setupServiceDto applicatioDto.SetupServic
 
 	sqlDB := postgresRepo.Conn()
 
-	userRepo := postgresuser.New(sqlDB)
+	userRepo := postgresuser.New(sqlDB ,redisAdaptor)
 	userSvc := userservice.New(authSvc, userRepo)
 
 	emailRepo := postgresemailcode.New(sqlDB ,cfg)
@@ -89,7 +85,8 @@ func setupServices(cfg config.Config) (setupServiceDto applicatioDto.SetupServic
 	return applicatioDto.SetupServiceDTO{
 		UserService:  userSvc,
 		AuthService:  authSvc,
-		// EmailService: emailSvc,
+		EmailService: emailSvc,
+		RedisAdaptor: redisAdaptor,
 		// ItemService:        itemSvc,
 		// ActionService:      actionSvc,
 		// TransactionService: transactionSvc,

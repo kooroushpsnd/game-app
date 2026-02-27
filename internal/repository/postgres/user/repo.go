@@ -1,13 +1,15 @@
 package postgresuser
 
 import (
+	"goProject/internal/adapter/redis"
 	"goProject/internal/repository/postgres"
 )
 
 type Repo struct {
-	db postgres.DBTX
+	redis *redis.Adapter
+	db    postgres.DBTX
 }
 
-func New(db postgres.DBTX) *Repo{
-	return &Repo{db: db}
+func New(db postgres.DBTX, redis *redis.Adapter) *Repo {
+	return &Repo{db: db, redis: redis}
 }

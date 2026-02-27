@@ -3,6 +3,7 @@ package postgresuser
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"goProject/internal/pkg/errmsg"
 	"goProject/internal/pkg/richerror"
 )
@@ -10,9 +11,9 @@ import (
 func (r *Repo) IsEmailUnique(ctx context.Context, email string) (bool, error) {
 	const op = "postgres.IsEmailUnique"
 
-	const q = "select %s from users where email = $1"
+	query := fmt.Sprintf("SELECT %s FROM users WHERE email = $1", UserColumns)
 
-	row := r.db.QueryRowContext(ctx, q, UserColumns, email)
+	row := r.db.QueryRowContext(ctx, query, email)
 	_, err := scanUser(row)
 	if err != nil {
 		if err == sql.ErrNoRows {

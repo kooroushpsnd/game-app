@@ -38,14 +38,14 @@ func (r *Repo) UpdateEmailCode(ctx context.Context, email string, req emailcoded
 
 	args = append(args, codeExist.ID)
 
-	q := fmt.Sprintf(`
+	query := fmt.Sprintf(`
         UPDATE email_codes
         SET %s
         WHERE id = $%d
-        RETURNING id, email, hash_code, attempts, expiration_date, user_id, created_at, status
-    `, strings.Join(sets, ", "), idx)
+        RETURNING %s;
+    `, strings.Join(sets, ", "), idx , EmailColumns)
 
-	row := r.db.QueryRowContext(ctx, q, args...)
+	row := r.db.QueryRowContext(ctx, query, args...)
 	emailCode, err := scanEmailCode(row)
 	if err != nil {
 		return entity.EmailCode{}, richerror.New(op).

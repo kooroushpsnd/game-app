@@ -2,6 +2,7 @@ package postgresemailcode
 
 import (
 	"context"
+	"fmt"
 	"goProject/internal/entity"
 	"goProject/internal/pkg/errmsg"
 	"goProject/internal/pkg/richerror"
@@ -10,14 +11,14 @@ import (
 func (r *Repo) GetLatestEmailCode(ctx context.Context, email string) (entity.EmailCode, error) {
 	const op = "postgresemailcode.GetLeastEmailCode"
 
-	const q = `
-		SELECT * FROM email_codes
+	query := fmt.Sprintf(`
+		SELECT %s FROM email_codes
 		WHERE email = $1 AND status = $2
 		ORDER BY id DESC
 		LIMIT 1;
-	`
+	`, EmailColumns)
 
-	row := r.db.QueryRowContext(ctx, q, email ,entity.EmailCodeStatusActive)
+	row := r.db.QueryRowContext(ctx, query, email ,entity.EmailCodeStatusActive)
 	emailCode, err := scanEmailCode(row)
 	if err != nil {
 		return entity.EmailCode{}, richerror.New(op).
