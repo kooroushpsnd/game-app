@@ -3,6 +3,7 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -43,5 +44,6 @@ func New() (*PostgreSQLDB, error) {
 		return nil, fmt.Errorf("ping postgres: %w", err)
 	}
 
+	log.Println("Postgres Started Successfully")
 	return &PostgreSQLDB{db: db}, nil
 }

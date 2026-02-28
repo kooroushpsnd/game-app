@@ -1,15 +1,24 @@
 package postgresuser
 
 import (
-	"goProject/internal/adapter/redis"
+	"context"
+	"goProject/internal/entity"
 	"goProject/internal/repository/postgres"
 )
 
-type Repo struct {
-	redis *redis.Adapter
-	db    postgres.DBTX
+type UserCache interface {
+	GetByID(ctx context.Context, userID uint) (entity.User, bool, error)
+	GetByEmail(ctx context.Context, email string) (entity.User, bool, error)
+	Set(ctx context.Context, user entity.User) error
+	DeleteByID(ctx context.Context, userID uint) error
+	DeleteByEmail(ctx context.Context, email string) error
 }
 
-func New(db postgres.DBTX, redis *redis.Adapter) *Repo {
-	return &Repo{db: db, redis: redis}
+type Repo struct {
+	userCache UserCache
+	db        postgres.DBTX
+}
+
+func New(db postgres.DBTX, userCache UserCache) *Repo {
+	return &Repo{db: db, userCache: userCache}
 }

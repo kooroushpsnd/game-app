@@ -1,7 +1,8 @@
-package redis
+package redisadaptor
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -9,9 +10,9 @@ import (
 )
 
 type Config struct {
-	UserCacheKeyID    string        `koanf:"user_cache_key_id"`
-	UserCacheKeyEmail string        `koanf:"user_cache_key_email"`
-	UserCacheTTL      time.Duration `koanf:"user_cache_ttl"`
+	DialTimeout    time.Duration   `koanf:"redis_dial_timeout"`
+	ReadTimeout    time.Duration   `koanf:"redis_read_timeout"`
+	WriteTimeout   time.Duration   `koanf:"redis_write_timeout"`
 }
 
 type Adapter struct {
@@ -24,15 +25,15 @@ func New(config Config) *Adapter {
 		Addr:     fmt.Sprintf("%s:%s", os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT")),
 		Password: os.Getenv("REDIS_PASSWORD"),
 		DB:       0,
+		DialTimeout: config.DialTimeout,
+		ReadTimeout: config.ReadTimeout,
+		WriteTimeout: config.WriteTimeout,
 	})
 
+	log.Println("Redis Started Successfully")
 	return &Adapter{client: rdb ,config: config}
 }
 
 func (a *Adapter) Client() *redis.Client {
 	return a.client
-}
-
-func (a *Adapter) Config() Config {
-	return a.config
 }

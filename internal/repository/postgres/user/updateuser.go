@@ -12,6 +12,7 @@ import (
 
 func (r *Repo) UpdateUser(ctx context.Context ,userID uint ,req userdto.UserUpdatePatch) (entity.User, error) {
 	const op = "postgres.UpdateUser"
+    
 	userExist ,err := r.GetUserByID(ctx ,userID)
 	if err != nil {
 		return entity.User{} ,err
@@ -66,6 +67,12 @@ func (r *Repo) UpdateUser(ctx context.Context ,userID uint ,req userdto.UserUpda
 	if err != nil {
 		return entity.User{}, richerror.New(op).
 			WithErr(err).WithMessage(errmsg.ErrorMsg_CantScanQueryResult).WithKind(richerror.KindInvalid)
+	}
+
+    if r.userCache != nil {
+		_ = r.userCache.DeleteByID(ctx, userID)
+		_ = r.userCache.DeleteByEmail(ctx, userExist.Email)
+		_ = r.userCache.Set(ctx, user)
 	}
 
     return user, err

@@ -10,7 +10,12 @@ application:
   email_code_attempts_max: 3
   email_code_resend_minute: 1m
 
-redis:
+redis_user:
   user_cache_ttl: 30m
   user_cache_key_id: "user_id:%d"
   user_cache_key_email: "user_email:%s"
+
+redis_adapter:
+  redis_dial_timeout: 2m
+  redis_read_timeout: 1m
+  redis_write_timeout: 1m
